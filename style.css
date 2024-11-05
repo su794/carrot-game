@@ -1,0 +1,90 @@
+body {
+    background-color: black;
+}
+
+.game-wrapper {
+    background-image: url(img/background.png);
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    height: 500px;
+    border-radius: 20px;
+    text-align: center;
+}
+
+.hidden {
+    display: none;
+}
+
+.play-pause {
+    border: 2px solid black;
+    border-radius: 6px;
+    font-size: 25px;
+    width: 50px;
+    height: 50px;
+    background: gold;
+    margin: 25px 0;
+}
+
+.timer {
+    border: 2px solid black;
+    border-radius: 6px;
+    font-size: 25px;
+    width: 10%;
+    margin: 0 auto 25px;
+    background: white;
+}
+
+.carrotNum {
+    border: 2px solid black;
+    border-radius: 50%;
+    font-size: 25px;
+    background-color: orange;
+    color: white;
+    padding: 10px 15px;
+    display: inline;
+}
+
+#farmArea {
+    height: 60%;
+    position: relative;
+}
+
+.games {
+    width: 50px;
+    cursor: pointer;
+    position: absolute;
+}
+
+
+.message {
+    top: 0;
+    right: 0;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 10;
+}
+
+.failed,
+.won {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+}
+
+.failed i,
+.won i {
+    display: block;
+    border: 1px solid black;
+    padding: 5px;
+    margin-top: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+}
