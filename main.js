@@ -2,10 +2,12 @@ let timer = document.querySelector('.timer');
 let time = 10;
 let timeleft = time;
 let downloadTimer;
+let timeStr = timeleft.toString();
 
+const playPauseBtn = document.querySelector('.play-pause');
 const playBtn = document.querySelector('#play');
 const pauseBtn = document.querySelector('#pause');
-
+const rePlayBtn = document.querySelectorAll('.re-try i');
 
 const farmArea = document.querySelector('#farmArea');
 
@@ -20,18 +22,15 @@ let results = [];
 
 let carrotLength = document.querySelectorAll('.carrot').length;
 
-document.querySelector('.carrotNum').innerText = carrotLength;
-
-
 farmArea.addEventListener('click', (e) => {
   
   if(e.target.classList.contains('bug')) {
     stopGame('bug');
   } else if (e.target.classList.contains('carrot')) {
-    e.target.remove();
-    let carrotLength = document.querySelectorAll('.carrot').length;
+    e.target.classList.add('hidden');
+    let carrotLength = document.querySelectorAll('.carrot:not(.hidden)').length;
     document.querySelector('.carrotNum').innerText = carrotLength;
-    console.log(carrotLength);
+    
     if( carrotLength === 0 ) {
       stopGame('win');
     }
@@ -39,52 +38,85 @@ farmArea.addEventListener('click', (e) => {
 })
 
 function initGame() {
-  document.querySelector('body').classList.add('gameOn');
-  pauseBtn.classList.remove('hidden');
-  playBtn.classList.add('hidden');
-  document.querySelector('.message').classList.add('hidden');
-
-  startTimer();
-
-  for (let i = 0; i < 17; i++) {
-    let xCoor = randomCorX(farmArea.getBoundingClientRect().x, farmArea.getBoundingClientRect().width);
-    let yCoor = randomCorX(farmArea.getBoundingClientRect().top, farmArea.getBoundingClientRect().bottom);
-    
-    let elemCoor = {xCoor, yCoor}
-    results.push(elemCoor);
+  if( !pauseBtn.classList.contains('paused') ) {
+    timeleft = 10;
+    downloadTimer = undefined;
+    document.querySelector('body').classList.add('gameOn');
+    pauseBtn.classList.remove('hidden');
+    playBtn.classList.add('hidden');
+    document.querySelector('.message').classList.add('hidden');
+    document.querySelectorAll('.re-try').forEach( btn => btn.classList.remove('hidden') );
+    document.querySelector('.carrotNum').innerText = carrotLength;
+    timer.innerHTML = `00:${timeStr.padStart(2, '0')}`;
+    startTimer();
   
-    document.querySelector(`.games[data-id="${i}"]`).style.left = `${xCoor - 50}px`;
-    document.querySelector(`.games[data-id="${i}"]`).style.top = `${yCoor - 50}px`;
+    
+    for (let i = 0; i < 17; i++) {
+      let xCoor = randomCorX(farmArea.getBoundingClientRect().x, farmArea.getBoundingClientRect().width);
+      let yCoor = randomCorX(farmArea.getBoundingClientRect().top, farmArea.getBoundingClientRect().bottom);
+      
+      let elemCoor = {xCoor, yCoor}
+      results.push(elemCoor);
+    
+      document.querySelector(`.games[data-id="${i}"]`).style.left = `${xCoor - 50}px`;
+      document.querySelector(`.games[data-id="${i}"]`).style.top = `${yCoor - 50}px`;
+      document.querySelector(`.games[data-id="${i}"]`).classList.remove('hidden');
+    }
+  } else if( pauseBtn.classList.contains('paused') ) {
+    pauseGame();
+    
   }
+
 }
 function stopGame(clicked) {
-  let replayBtn = document.querySelector('i');
 
   if( clicked == 'bug' ) {
     document.querySelector('.message').classList.remove('hidden');
     winMsg.classList.add('hidden');
-    console.log(replayBtn);
+    
     stopTimer();
-    replayBtn.addEventListener('click', initGame);
     
   } else {
     document.querySelector('.message').classList.remove('hidden');
     failedMsg.classList.add('hidden');
     stopTimer();
-    replayBtn.addEventListener('click', initGame);
-    
   }
 
-  document.querySelector('body').classList('gameOn');
+  document.querySelector('body').classList.remove('gameOn');
   
 }
 
 function pauseGame() {
-  stopTimer();
+  playBtn.classList.remove('hidden');
+  pauseBtn.classList.add('hidden');
+  if( this.classList.contains('paused') ) {
+    
+    setInterval(function(){
+      timeleft--;
+      let timeStr = timeleft.toString();
+      timer.innerHTML = `00:${timeStr.padStart(2, '0')}`;
+      if(timeleft <= 0) {
+        clearInterval(downloadTimer);
+      }
+
+      if( timeleft === 0 && carrotLength > 0 ) {
+        stopGame('bug');
+      }
+      
+    }, 1000);
+    this.classList.remove('paused');
+    
+  } else {
+    stopTimer();
+    this.classList.add('paused');
+  }
+  
 }
 
 function startTimer() {
+  
   if(!downloadTimer) {
+    
     downloadTimer = setInterval(function(){
       timeleft--;
       let timeStr = timeleft.toString();
@@ -92,32 +124,25 @@ function startTimer() {
       if(timeleft <= 0) {
         clearInterval(downloadTimer);
       }
+
+      if( timeleft === 0 && carrotLength > 0 ) {
+        stopGame('bug');
+      }
+      
     }, 1000);
+
   }
+
+  
+  
 }
 
 function stopTimer() {
   clearInterval(downloadTimer);
-  console.log(timeleft);
-  //downloadTimer = null;
 }
 
-//console.log(timeleft);
-
-
-// function handleTimer(handle) {
-  
-//   if( handle == 'play' ) {
-    
-//   } else if(handle == 'pause' ) {
-
-//   } else if( handle == 'stop' ) {
-//     clearInterval(downloadTimer);
-//   }
-  
-// }
-
-playBtn.addEventListener('click', initGame);
-
-pauseBtn.addEventListener('click', pauseGame);
-
+playPauseBtn.addEventListener('click', initGame);
+pauseBtn.addEventListener('click', pauseBtn.classList.add('paused'));
+rePlayBtn.forEach( btn => 
+  btn.addEventListener('click', initGame )
+);
