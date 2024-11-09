@@ -37,9 +37,9 @@ farmArea.addEventListener('click', (e) => {
   }
 })
 
-function initGame() {
-  if( !pauseBtn.classList.contains('paused') ) {
-    timeleft = 10;
+function initGame(e) {
+  console.log(e.target)
+  timeleft = 10;
     downloadTimer = undefined;
     document.querySelector('body').classList.add('gameOn');
     pauseBtn.classList.remove('hidden');
@@ -62,10 +62,17 @@ function initGame() {
       document.querySelector(`.games[data-id="${i}"]`).style.top = `${yCoor - 50}px`;
       document.querySelector(`.games[data-id="${i}"]`).classList.remove('hidden');
     }
-  } else if( pauseBtn.classList.contains('paused') ) {
-    pauseGame();
-    
+
+  if(
+      e.target.classList.contains('fa-play')
+    ) {
+    startTimer();
+  } else if(e.target.classList.contains('fa-pause')) {
+    playBtn.classList.remove('hidden');
+    pauseBtn.classList.add('hidden');
+    clearInterval(downloadTimer);
   }
+  
 
 }
 function stopGame(clicked) {
@@ -73,13 +80,12 @@ function stopGame(clicked) {
   if( clicked == 'bug' ) {
     document.querySelector('.message').classList.remove('hidden');
     winMsg.classList.add('hidden');
-    
-    stopTimer();
+    clearInterval(downloadTimer);
     
   } else {
     document.querySelector('.message').classList.remove('hidden');
     failedMsg.classList.add('hidden');
-    stopTimer();
+    clearInterval(downloadTimer);
   }
 
   document.querySelector('body').classList.remove('gameOn');
@@ -142,7 +148,7 @@ function stopTimer() {
 }
 
 playPauseBtn.addEventListener('click', initGame);
-pauseBtn.addEventListener('click', pauseBtn.classList.add('paused'));
+//pauseBtn.addEventListener('click', pauseBtn.classList.add('paused'));
 rePlayBtn.forEach( btn => 
   btn.addEventListener('click', initGame )
 );
