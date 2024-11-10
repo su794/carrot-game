@@ -4,42 +4,27 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrot picking game</title>
     <link rel="stylesheet" href="style.css">
     <script src="main.js" defer></script>
-    <title>Document</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
     <section class="game-wrapper">
-        <button class="play-pause">
-            <span id="play"><i class="fa-solid fa-play"></i></span>
-            <span id="pause" class="hidden"><i class="fa-solid fa-pause"></i></span>
-        </button>
-        <div class="timer">00:10</div>
-        <div class="carrotNum"></div>
+        <header>
+            <button class="play-pause">
+                <i class="fa-solid fa-play"></i>
+            </button>
+            <div class="timer hidden">00:10</div>
+            <span class="carrotNum hidden"></div>
+        </header>
+        
+        <div id="farmArea"></div>
+    </section>
+    <section>
         <div class="message hidden">
             <div class="re-try failed">You lost <i class="fa-solid fa-reply"></i></div>
             <div class="re-try won">You won <i class="fa-solid fa-reply"></i></div>
-        </div>
-        <div id="farmArea">
-            <img data-id="0" src="img/carrot.png" alt="" class="hidden games carrot">
-            <img data-id="1" src="img/carrot.png" alt="" class="hidden games carrot">
-            <img data-id="2" src="img/carrot.png" alt="" class="hidden games carrot">
-            <img data-id="3" src="img/carrot.png" alt="" class="hidden games carrot">
-            <img data-id="4" src="img/carrot.png" alt="" class="hidden games carrot">
-            <img data-id="5" src="img/carrot.png" alt="" class="hidden games carrot">
-            <img data-id="6" src="img/carrot.png" alt="" class="hidden games carrot">
-            <img data-id="7" src="img/carrot.png" alt="" class="hidden games carrot">
-            <img data-id="8" src="img/carrot.png" alt="" class="hidden games carrot">
-            <img data-id="9" src="img/carrot.png" alt="" class="hidden games carrot">
-
-            <img data-id="10" src="img/bug.png" alt="" class="hidden games bug">
-            <img data-id="11" src="img/bug.png" alt="" class="hidden games bug">
-            <img data-id="12" src="img/bug.png" alt="" class="hidden games bug">
-            <img data-id="13" src="img/bug.png" alt="" class="hidden games bug">
-            <img data-id="14" src="img/bug.png" alt="" class="hidden games bug">
-            <img data-id="15" src="img/bug.png" alt="" class="hidden games bug">
-            <img data-id="16" src="img/bug.png" alt="" class="hidden games bug">
         </div>
     </section>
 </body>

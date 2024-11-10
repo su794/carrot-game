@@ -42,7 +42,6 @@ body {
     background-color: orange;
     color: white;
     padding: 10px 15px;
-    display: inline;
 }
 
 #farmArea {
@@ -50,7 +49,7 @@ body {
     position: relative;
 }
 
-.games {
+#farmArea img {
     width: 50px;
     cursor: pointer;
     position: absolute;
