@@ -10,7 +10,8 @@ let gameOn = false;
 const playPauseBtn = document.querySelector('.play-pause');
 const playBtn = document.querySelector('.fa-play');
 const pauseBtn = document.querySelector('.fa-pause');
-const rePlayBtn = document.querySelectorAll('.re-try i');
+const failedRePlayBtn = document.querySelector('.failed:not(.hidden)');
+const wonRePlayBtn = document.querySelector('.won:not(.hidden)');
 
 let score = document.querySelector('.carrotNum');
 let timer = document.querySelector('.timer');
@@ -19,6 +20,7 @@ let timeleft = time;
 let downloadTimer;
 let timeStr = timeleft.toString();
 
+const msgModal = document.querySelector('.message');
 const failedMsg = document.querySelector('.failed');
 const winMsg = document.querySelector('.won');
 
@@ -33,7 +35,7 @@ farmArea.addEventListener('click', (e) => {
   
   if(e.target.classList.contains('bug')) {
     stopGame('bug');
-  } else if (e.target.buttonIconclassList.contains('carrot')) {
+  } else if (e.target.classList.contains('carrot')) {
     e.target.classList.add('hidden');
     let carrotLength = document.querySelectorAll('.carrot:not(.hidden)').length;
     score.innerText = carrotLength;
@@ -111,12 +113,12 @@ function showPlayButton() {
 function stopGame(clicked) {
 
   if( clicked == 'bug' ) {
-    document.querySelector('.message').classList.remove('hidden');
+    msgModal.classList.remove('hidden');
     winMsg.classList.add('hidden');
     clearInterval(downloadTimer);
     
   } else {
-    document.querySelector('.message').classList.remove('hidden');
+    msgModal.classList.remove('hidden');
     failedMsg.classList.add('hidden');
     clearInterval(downloadTimer);
   }
@@ -180,13 +182,27 @@ function stopTimer() {
   clearInterval(downloadTimer);
 }
 
+function restartGame(e) {
+
+  if(e.target.classList.contains('fa-reply')) {
+    farmArea.innerHTML = '';
+    msgModal.classList.add('hidden');
+    initGame();
+  }
+
+}
+
 playPauseBtn.addEventListener('click', () => {
   initGame();
   gameOn = !gameOn;
 
 } );
 
+failedRePlayBtn.addEventListener('click', (e) => {
+  
+  restartGame(e);
+});
 
-rePlayBtn.forEach( btn => 
-  btn.addEventListener('click', initGame )
-);
+wonRePlayBtn.addEventListener('click', (e) => {
+  restartGame(e);
+})
