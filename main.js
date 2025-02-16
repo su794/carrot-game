@@ -20,16 +20,19 @@ let timeleft = time;
 let downloadTimer;
 let timeStr = timeleft.toString();
 
-const msgModal = document.querySelector('.message');
+const msgModal = document.querySelector('.message .modal');
+const overlay = document.querySelector('.overlay');
 const failedMsg = document.querySelector('.failed');
 const winMsg = document.querySelector('.won');
+const pausedMsg = document.querySelector('.paused');
+
+const modalText = document.querySelector('.modal .modal-text');
+const modalIcon = document.querySelector('.modal i')
 
 function randomCor(min, max) {
   // this includes the min value ( + min at the end )
   return Math.floor(Math.random() * (max - min) + min);
 }
-
-let carrotLength = document.querySelectorAll('.carrot').length;
 
 farmArea.addEventListener('click', (e) => {
   
@@ -46,7 +49,10 @@ farmArea.addEventListener('click', (e) => {
   }
 })
 
-function initGame(e) {
+function playGame() {
+  timer.innerHTML = `00:${time.toString()}`;
+  score.innerText = CARROT_COUNT;
+  
   // timeleft = 10;
   //   downloadTimer = undefined;
   //   document.querySelector('body').classList.add('gameOn');
@@ -77,6 +83,17 @@ function initGame(e) {
   showStopButton();
   timer.classList.remove('hidden');
   score.classList.remove('hidden');
+  startTimer();
+}
+
+function pauseGame() {
+  console.log('pause');
+  handleOverlay('show', 'Paused', 'fa-regular fa-face-smile-wink');
+}
+
+function resumeGame() {
+  console.log('resume');
+  handleOverlay('hide');
 }
 
 function placeImages(className, count, imgPath) {
@@ -113,64 +130,97 @@ function showPlayButton() {
 function stopGame(clicked) {
 
   if( clicked == 'bug' ) {
-    msgModal.classList.remove('hidden');
-    winMsg.classList.add('hidden');
-    clearInterval(downloadTimer);
+    // msgModal.classList.remove('hidden');
+    // failedMsg.classList.remove('hidden');
+    // winMsg.classList.add('hidden');
+    //clearInterval(downloadTimer);
     
   } else {
-    msgModal.classList.remove('hidden');
-    failedMsg.classList.add('hidden');
-    clearInterval(downloadTimer);
+    // msgModal.classList.remove('hidden');
+    // failedMsg.classList.add('hidden');
+    // winMsg.classList.remove('hidden');
+    //clearInterval(downloadTimer);
   }
 
   document.querySelector('body').classList.remove('gameOn');
+  stopTimer();
   
 }
 
-function pauseGame() {
-  playBtn.classList.remove('hidden');
-  pauseBtn.classList.add('hidden');
-  if( this.classList.contains('paused') ) {
-    
-    setInterval(function(){
-      timeleft--;
-      let timeStr = timeleft.toString();
-      timer.innerHTML = `00:${timeStr.padStart(2, '0')}`;
-      if(timeleft <= 0) {
-        clearInterval(downloadTimer);
-      }
+function handleOverlay(status, modalMsg, iconClass) {
+  
 
-      if( timeleft === 0 && carrotLength > 0 ) {
-        stopGame('bug');
-      }
-      
-    }, 1000);
-    this.classList.remove('paused');
+  if( status === 'show' && ( modalMsg && iconClass ) ) {
+    console.log('overlay add');
     
-  } else {
-    stopTimer();
-    this.classList.add('paused');
+    overlay.classList.remove('hidden');
+    modalText.innerHTML = modalMsg;
+    modalIcon.setAttribute('class', iconClass);
+
+  } else if( status === 'hide' ) {
+
+    console.log('overlay clear');
+
+    overlay.classList.add('hidden');
+    modalText.innerHTML = '';
+    modalIcon.setAttribute('class', '');
   }
   
+  
+  
 }
+
+//function pauseGame() {
+  //playBtn.classList.remove('hidden');
+  //pauseBtn.classList.add('hidden');
+  //if( this.classList.contains('paused') ) {
+    
+    // setInterval(function(){
+    //   timeleft--;
+    //   let timeStr = timeleft.toString();
+    //   timer.innerHTML = `00:${timeStr.padStart(2, '0')}`;
+    //   if(timeleft <= 0) {
+    //     clearInterval(downloadTimer);
+    //   }
+
+    //   if( timeleft === 0 && carrotLength > 0 ) {
+    //     stopGame('bug');
+    //   }
+      
+    // }, 1000);
+    //this.classList.remove('paused');
+    
+  //} else {
+    ///stopTimer();
+    //this.classList.add('paused');
+  //}
+  
+//}
 
 function startTimer() {
   
+  let carrotLength = document.querySelectorAll('.carrot').length;
   if(!downloadTimer) {
     
     downloadTimer = setInterval(function(){
-      timeleft--;
-      let timeStr = timeleft.toString();
+      time--;
+      console.log(time, carrotLength);
+      let timeStr = time.toString();
       timer.innerHTML = `00:${timeStr.padStart(2, '0')}`;
-      if(timeleft <= 0) {
+
+      // if( time === 0 && carrotLength > 0 ) {
+      //   stopGame('bug');
+      // }
+
+      if(time <= 0) {
         clearInterval(downloadTimer);
       }
 
-      if( timeleft === 0 && carrotLength > 0 ) {
-        stopGame('bug');
-      }
+      
       
     }, 1000);
+
+    
 
   }
 
@@ -184,25 +234,40 @@ function stopTimer() {
 
 function restartGame(e) {
 
-  if(e.target.classList.contains('fa-reply')) {
-    farmArea.innerHTML = '';
-    msgModal.classList.add('hidden');
-    initGame();
-  }
+  // if(e.target.classList.contains('fa-reply')) {
+  //   farmArea.innerHTML = '';
+  //   msgModal.classList.add('hidden');
+  //   playGame();
+  // }
 
 }
 
-playPauseBtn.addEventListener('click', () => {
-  initGame();
-  gameOn = !gameOn;
-
-} );
-
-failedRePlayBtn.addEventListener('click', (e) => {
+playPauseBtn.addEventListener('click', (e) => {
+  if( e.target.classList.contains('fa-play') ) {
+    playGame();
+  } else if( e.target.classList.contains('fa-pause') ) {
+    pauseGame();
+  }
   
-  restartGame(e);
+  // gameOn = !gameOn;
+
 });
 
-wonRePlayBtn.addEventListener('click', (e) => {
-  restartGame(e);
-})
+// pauseBtn.addEventListener('click', () => {
+  
+// });
+
+// failedRePlayBtn.addEventListener('click', (e) => {
+  
+//   restartGame(e);
+// });
+
+// wonRePlayBtn.addEventListener('click', (e) => {
+//   restartGame(e);
+// })
+
+msgModal.addEventListener('click', (e) => {
+  if( e.target.classList.contains('fa-face-smile-wink')) {
+    resumeGame();
+  }
+});
