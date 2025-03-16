@@ -54,31 +54,6 @@ function playGame() {
   farmArea.innerHTML = '';
   timer.innerHTML = `00:${time.toString()}`;
   score.innerText = CARROT_COUNT;
-  
-  console.log(downloadTimer);
-  // timeleft = 10;
-  //   downloadTimer = undefined;
-  //   document.querySelector('body').classList.add('gameOn');
-  //   pauseBtn.classList.remove('hidden');
-  //   playBtn.classList.add('hidden');
-  //   document.querySelector('.message').classList.add('hidden');
-  //   document.querySelectorAll('.re-try').forEach( btn => btn.classList.remove('hidden') );
-  //   document.querySelector('.carrotNum').innerText = carrotLength;
-  //   timer.innerHTML = `00:${timeStr.padStart(2, '0')}`;
-  //   startTimer();
-  
-    
-    
-
-  // if(
-  //     e.target.classList.contains('fa-play')
-  //   ) {
-  //   startTimer();
-  // } else if(e.target.classList.contains('fa-pause')) {
-  //   playBtn.classList.remove('hidden');
-  //   pauseBtn.classList.add('hidden');
-  //   clearInterval(downloadTimer);
-  // }
 
   placeImages('carrot', CARROT_COUNT, 'img/carrot.png');
   placeImages('bug', BUG_COUNT, 'img/bug.png');
@@ -90,13 +65,11 @@ function playGame() {
 }
 
 function pauseGame() {
-  console.log('pause');
   stopTimer();
   handleOverlay('show', 'Paused', 'fa-regular fa-face-smile-wink');
 }
 
 function resumeGame() {
-  console.log('resume');
   handleOverlay('hide');
   startTimer();
 }
@@ -133,19 +106,6 @@ function showPlayButton() {
 
 
 function stopGame(clicked) {
-  if( clicked == 'bug' ) {
-    // msgModal.classList.remove('hidden');
-    // failedMsg.classList.remove('hidden');
-    // winMsg.classList.add('hidden');
-    //clearInterval(downloadTimer);
-    
-  } else {
-    // msgModal.classList.remove('hidden');
-    // failedMsg.classList.add('hidden');
-    // winMsg.classList.remove('hidden');
-    //clearInterval(downloadTimer);
-  }
-
   if( clicked == 'win' ) {
     handleOverlay('show', clicked, 'fa-solid fa-thumbs-up');
     time = 10;
@@ -160,10 +120,7 @@ function stopGame(clicked) {
 }
 
 function handleOverlay(status, modalMsg, iconClass) {
-  
-
   if( status === 'show' && ( modalMsg && iconClass ) ) {
-    console.log('overlay add');
     
     overlay.classList.remove('hidden');
     modalText.innerHTML = modalMsg;
@@ -171,78 +128,19 @@ function handleOverlay(status, modalMsg, iconClass) {
 
   } else if( status === 'hide' ) {
 
-    console.log('overlay clear');
-
     overlay.classList.add('hidden');
     modalText.innerHTML = '';
     modalIcon.setAttribute('class', '');
   }
-  
-  
-  
 }
 
-//function pauseGame() {
-  //playBtn.classList.remove('hidden');
-  //pauseBtn.classList.add('hidden');
-  //if( this.classList.contains('paused') ) {
-    
-    // setInterval(function(){
-    //   timeleft--;
-    //   let timeStr = timeleft.toString();
-    //   timer.innerHTML = `00:${timeStr.padStart(2, '0')}`;
-    //   if(timeleft <= 0) {
-    //     clearInterval(downloadTimer);
-    //   }
-
-    //   if( timeleft === 0 && carrotLength > 0 ) {
-    //     stopGame('bug');
-    //   }
-      
-    // }, 1000);
-    //this.classList.remove('paused');
-    
-  //} else {
-    ///stopTimer();
-    //this.classList.add('paused');
-  //}
-  
-//}
-
 function startTimer() {
-  
   let carrotLength = document.querySelectorAll('.carrot').length;
-  // if(!downloadTimer) {
-    
-  //   downloadTimer = setInterval(function(){
-  //     time--;
-  //     console.log(time, carrotLength);
-  //     let timeStr = time.toString();
-  //     timer.innerHTML = `00:${timeStr.padStart(2, '0')}`;
-
-  //     // if( time === 0 && carrotLength > 0 ) {
-  //     //   stopGame('bug');
-  //     // }
-
-  //     if(time <= 0) {
-  //       stopTimer();
-  //       carrotLength > 0 && stopGame('lost');
-  //     }
-      
-  //   }, 1000);
-  // } else {
-  //   downloadTimer;
-  // }
 
   downloadTimer = setInterval(function(){
     time--;
-    console.log(time, carrotLength);
     let timeStr = time.toString();
     timer.innerHTML = `00:${timeStr.padStart(2, '0')}`;
-
-    // if( time === 0 && carrotLength > 0 ) {
-    //   stopGame('bug');
-    // }
 
     if(time <= 0) {
       stopTimer();
@@ -259,39 +157,14 @@ function stopTimer() {
   clearInterval(downloadTimer);
 }
 
-function restartGame(e) {
-
-  // if(e.target.classList.contains('fa-reply')) {
-  //   farmArea.innerHTML = '';
-  //   msgModal.classList.add('hidden');
-  //   playGame();
-  // }
-
-}
-
 playPauseBtn.addEventListener('click', (e) => {
   if( e.target.classList.contains('fa-play') ) {
     playGame();
   } else if( e.target.classList.contains('fa-pause') ) {
     pauseGame();
   }
-  
-  // gameOn = !gameOn;
 
 });
-
-// pauseBtn.addEventListener('click', () => {
-  
-// });
-
-// failedRePlayBtn.addEventListener('click', (e) => {
-  
-//   restartGame(e);
-// });
-
-// wonRePlayBtn.addEventListener('click', (e) => {
-//   restartGame(e);
-// })
 
 msgModal.addEventListener('click', (e) => {
   if( e.target.classList.contains('fa-face-smile-wink')) {
