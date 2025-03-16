@@ -17,8 +17,8 @@ let score = document.querySelector('.carrotNum');
 let timer = document.querySelector('.timer');
 let time = 10;
 let timeleft = time;
-let downloadTimer;
 let timeStr = timeleft.toString();
+let downloadTimer;
 
 const msgModal = document.querySelector('.message .modal');
 const overlay = document.querySelector('.overlay');
@@ -37,7 +37,7 @@ function randomCor(min, max) {
 farmArea.addEventListener('click', (e) => {
   
   if(e.target.classList.contains('bug')) {
-    stopGame('bug');
+    stopGame('lost');
   } else if (e.target.classList.contains('carrot')) {
     e.target.classList.add('hidden');
     let carrotLength = document.querySelectorAll('.carrot:not(.hidden)').length;
@@ -50,9 +50,12 @@ farmArea.addEventListener('click', (e) => {
 })
 
 function playGame() {
+  handleOverlay('hide');
+  farmArea.innerHTML = '';
   timer.innerHTML = `00:${time.toString()}`;
   score.innerText = CARROT_COUNT;
   
+  console.log(downloadTimer);
   // timeleft = 10;
   //   downloadTimer = undefined;
   //   document.querySelector('body').classList.add('gameOn');
@@ -88,12 +91,14 @@ function playGame() {
 
 function pauseGame() {
   console.log('pause');
+  stopTimer();
   handleOverlay('show', 'Paused', 'fa-regular fa-face-smile-wink');
 }
 
 function resumeGame() {
   console.log('resume');
   handleOverlay('hide');
+  startTimer();
 }
 
 function placeImages(className, count, imgPath) {
@@ -128,7 +133,6 @@ function showPlayButton() {
 
 
 function stopGame(clicked) {
-
   if( clicked == 'bug' ) {
     // msgModal.classList.remove('hidden');
     // failedMsg.classList.remove('hidden');
@@ -140,6 +144,14 @@ function stopGame(clicked) {
     // failedMsg.classList.add('hidden');
     // winMsg.classList.remove('hidden');
     //clearInterval(downloadTimer);
+  }
+
+  if( clicked == 'win' ) {
+    handleOverlay('show', clicked, 'fa-solid fa-thumbs-up');
+    time = 10;
+  } else if( clicked == 'lost' ) {
+    handleOverlay('show', clicked, 'fa-solid fa-fan');
+    time = 10;
   }
 
   document.querySelector('body').classList.remove('gameOn');
@@ -200,31 +212,46 @@ function handleOverlay(status, modalMsg, iconClass) {
 function startTimer() {
   
   let carrotLength = document.querySelectorAll('.carrot').length;
-  if(!downloadTimer) {
+  // if(!downloadTimer) {
     
-    downloadTimer = setInterval(function(){
-      time--;
-      console.log(time, carrotLength);
-      let timeStr = time.toString();
-      timer.innerHTML = `00:${timeStr.padStart(2, '0')}`;
+  //   downloadTimer = setInterval(function(){
+  //     time--;
+  //     console.log(time, carrotLength);
+  //     let timeStr = time.toString();
+  //     timer.innerHTML = `00:${timeStr.padStart(2, '0')}`;
 
-      // if( time === 0 && carrotLength > 0 ) {
-      //   stopGame('bug');
-      // }
+  //     // if( time === 0 && carrotLength > 0 ) {
+  //     //   stopGame('bug');
+  //     // }
 
-      if(time <= 0) {
-        clearInterval(downloadTimer);
-      }
-
+  //     if(time <= 0) {
+  //       stopTimer();
+  //       carrotLength > 0 && stopGame('lost');
+  //     }
       
-      
-    }, 1000);
+  //   }, 1000);
+  // } else {
+  //   downloadTimer;
+  // }
 
+  downloadTimer = setInterval(function(){
+    time--;
+    console.log(time, carrotLength);
+    let timeStr = time.toString();
+    timer.innerHTML = `00:${timeStr.padStart(2, '0')}`;
+
+    // if( time === 0 && carrotLength > 0 ) {
+    //   stopGame('bug');
+    // }
+
+    if(time <= 0) {
+      stopTimer();
+      carrotLength > 0 && stopGame('lost');
+    }
     
+  }, 1000);
 
-  }
-
-  
+  downloadTimer;
   
 }
 
@@ -269,5 +296,7 @@ playPauseBtn.addEventListener('click', (e) => {
 msgModal.addEventListener('click', (e) => {
   if( e.target.classList.contains('fa-face-smile-wink')) {
     resumeGame();
+  } else {
+    playGame();
   }
 });
